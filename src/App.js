@@ -1,29 +1,18 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getAccessTokenThunk, getUserThunk } from './redux/store';
+
 import queryString from 'query-string';
-import axios from 'axios';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      access_token: '',
-      serverData: {},
-    };
-  }
-
   async componentDidMount() {
     const { access_token } = queryString.parse(window.location.search);
-    this.setState({ access_token });
-
-    const { data } = await axios.get('https://api.spotify.com/v1/me', {
-      headers: { Authorization: 'Bearer ' + access_token },
-    });
-
-    this.setState({ serverData: data });
+    await this.props.getAccessToken(access_token);
+    await this.props.getUser();
   }
 
   render() {
-    console.log(this.state.serverData);
+    console.log(this.props);
     return (
       <div className="App">
         <button
@@ -37,4 +26,18 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    token: state.token,
+    user: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAccessToken: (token) => dispatch(getAccessTokenThunk(token)),
+    getUser: () => dispatch(getUserThunk()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
