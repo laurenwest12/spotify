@@ -64,7 +64,7 @@ class App extends Component {
     this.props.getAccessToken(access_token);
     this.props.getUser();
     this.props.getPlaylists();
-    this.props.getPlaylist('5c1VqJ596GXHT2OR8ykz1g');
+    this.props.getPlaylist('7HwH196Vouhg0kEWxeFbMu');
   }
 
   render() {
