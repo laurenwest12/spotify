@@ -9,6 +9,55 @@ import {
 
 import queryString from 'query-string';
 
+const timeFunc = (playlist) => {
+  console.log('here');
+  const obj = {
+    Doug: {
+      totalTime: 0,
+      artists: {},
+    },
+    Lauren: {
+      totalTime: 0,
+      artists: {},
+    },
+    Travis: {
+      totalTime: 0,
+      artists: {},
+    },
+  };
+
+  playlist.items.forEach((item) => {
+    const user = item.added_by.id;
+    const artist = item.track.artists[0].name;
+    const duration = (item.track.duration_ms * 0.001) / 60;
+
+    if (user === '1240690038') {
+      if (!obj.Doug.artists[artist]) {
+        obj.Doug.artists[artist] = duration;
+      } else {
+        obj.Doug.artists[artist] += duration;
+      }
+      obj.Doug.totalTime += duration;
+    } else if (user === 'kqop08n80omg6r27s5l300sia') {
+      if (!obj.Travis.artists[artist]) {
+        obj.Travis.artists[artist] = duration;
+      } else {
+        obj.Travis.artists[artist] += duration;
+      }
+      obj.Travis.totalTime += duration;
+    } else if (user === '1220884360') {
+      if (!obj.Lauren.artists[artist]) {
+        obj.Lauren.artists[artist] = duration;
+      } else {
+        obj.Lauren.artists[artist] += duration;
+      }
+      obj.Lauren.totalTime += duration;
+    }
+  });
+
+  return obj;
+};
+
 class App extends Component {
   async componentDidMount() {
     const { access_token } = queryString.parse(window.location.search);
