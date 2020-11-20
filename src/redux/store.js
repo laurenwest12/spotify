@@ -4,6 +4,7 @@ import axios from 'axios';
 
 const GET_ACCESS_TOKEN = 'GET_ACCESS_TOKEN';
 const GET_USER = 'GET_USER';
+const GET_PLAYLISTS = 'GET_PLAYLISTS';
 
 const getAccessToken = (token) => ({
   type: GET_ACCESS_TOKEN,
@@ -13,6 +14,11 @@ const getAccessToken = (token) => ({
 const getUser = (user) => ({
   type: GET_USER,
   user,
+});
+
+const getPlaylists = (playlists) => ({
+  type: GET_PLAYLISTS,
+  playlists,
 });
 
 export const getAccessTokenThunk = (token) => {
@@ -28,6 +34,19 @@ export const getUserThunk = () => {
       headers: { Authorization: 'Bearer ' + accessToken },
     });
     dispatch(getUser(data));
+  };
+};
+
+export const getPlaylistsThunk = () => {
+  const accessToken = store.getState().token;
+  return async (dispatch) => {
+    const { data } = await axios.get(
+      'https://api.spotify.com/v1/me/playlists',
+      {
+        headers: { Authorization: 'Bearer ' + accessToken },
+      }
+    );
+    dispatch(getPlaylists(data));
   };
 };
 
@@ -49,9 +68,19 @@ const user = (state = {}, action) => {
   }
 };
 
+const playlists = (state = [], action) => {
+  switch (action.type) {
+    case GET_PLAYLISTS:
+      return action.playlists;
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
   token,
   user,
+  playlists,
 });
 
 const store = createStore(reducer, applyMiddleware(thunkMiddlewware));
