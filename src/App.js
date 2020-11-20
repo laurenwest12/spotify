@@ -1,20 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
 import { Component } from 'react';
+import queryString from 'query-string';
+import axios from 'axios';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
+      access_token: '',
       serverData: {},
     };
   }
 
-  // componentDidMount() {
+  async componentDidMount() {
+    const { access_token } = queryString.parse(window.location.search);
+    this.setState({ access_token });
 
-  // }
+    const { data } = await axios.get('https://api.spotify.com/v1/me', {
+      headers: { Authorization: 'Bearer ' + access_token },
+    });
+
+    this.setState({ serverData: data });
+  }
 
   render() {
+    console.log(this.state.serverData);
     return (
       <div className="App">
         <button
@@ -22,6 +31,7 @@ class App extends Component {
         >
           Sign in
         </button>
+        <div></div>
       </div>
     );
   }
