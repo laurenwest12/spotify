@@ -4,6 +4,7 @@ import {
   getAccessTokenThunk,
   getUserThunk,
   getPlaylistsThunk,
+  getPlaylistThunk,
 } from './redux/store';
 
 import queryString from 'query-string';
@@ -14,10 +15,11 @@ class App extends Component {
     this.props.getAccessToken(access_token);
     this.props.getUser();
     this.props.getPlaylists();
+    this.props.getPlaylist('5c1VqJ596GXHT2OR8ykz1g');
   }
 
   render() {
-    console.log(this.props.playlists);
+    console.log(this.props.playlist);
     return (
       <div>
         {!this.props.token && (
@@ -38,6 +40,7 @@ const mapStateToProps = (state) => {
     token: state.token,
     user: state.user,
     playlists: state.playlists,
+    playlist: state.playlist,
   };
 };
 
@@ -46,6 +49,7 @@ const mapDispatchToProps = (dispatch) => {
     getAccessToken: (token) => dispatch(getAccessTokenThunk(token)),
     getUser: () => dispatch(getUserThunk()),
     getPlaylists: () => dispatch(getPlaylistsThunk()),
+    getPlaylist: (id) => dispatch(getPlaylistThunk(id)),
   };
 };
 
